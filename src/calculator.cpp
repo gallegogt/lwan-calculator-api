@@ -5,48 +5,44 @@
 calculator::calculator() :req()
 {}
 
-double calculator::get_result(std::__cxx11::string request) {
+double calculator::get_result(std::string request) {
     double res = 0.0f, init = 0.0f;
+    try
+    {
+        req.json_unpack(request.c_str(), request.length());
+        if(req.ops.size() == 0) {
+            return 0.0f;
+        }
 
-    req.json_unpack(request.c_str(), request.length());
+        init = *req.ops.begin();
+        if(req.op == "-") {
+            res = std::accumulate(++req.ops.begin(),
+                            req.ops.end(),
+                            init,
+                            std::minus<double>());
+        } else if(req.op == "+") {
+            res = std::accumulate(++req.ops.begin(),
+                                  req.ops.end(),
+                                  init);
 
-    if(req.ops.size() == 0) {
-        return 0.0f;
+        } else if(req.op == "*") {
+            res = std::accumulate(++req.ops.begin(),
+                                  req.ops.end(),
+                                  init,
+                                  std::multiplies<double>());
+
+        } else if(req.op == "/") {
+            res = std::accumulate(++req.ops.begin(),
+                                  req.ops.end(),
+                                  init,
+                                  std::divides<double>());
+        }
     }
-
-    if(req.ops.size() == 1) {
-        return *req.ops.begin();
+    catch(const jsonpack::invalid_json &e) {
+        printf("[Invalid JSON][Error] %s (request=\"%s\")\n",e.what(), request.c_str());
     }
-
-    if(req.op == "-") {
-        init = *req.ops.begin();
-        res = std::accumulate(++req.ops.begin(),
-                        req.ops.end(),
-                        init,
-                        std::minus<double>());
-
-    } else if(req.op == "+") {
-
-        res = std::accumulate(req.ops.begin(),
-                              req.ops.end(),
-                              init);
-
-    } else if(req.op == "*") {
-
-        init = *req.ops.begin();
-        res = std::accumulate(++req.ops.begin(),
-                              req.ops.end(),
-                              init,
-                              std::multiplies<double>());
-
-    } else if(req.op == "/") {
-
-        init = *req.ops.begin();
-        res = std::accumulate(++req.ops.begin(),
-                              req.ops.end(),
-                              init,
-                              std::divides<double>());
-
+    catch(const jsonpack::type_error &e) {
+        printf("[Type][Error] %s (request=\"%s\")\n",e.what(), request.c_str());
     }
 
     return res;

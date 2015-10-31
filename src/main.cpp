@@ -22,7 +22,7 @@ lwan_http_status_t view_calculator(lwan_request_t * req,
             if(strcmp(qs->key, "query") == 0) {
                 calculator calc;
                 strbuf_append_printf(response->buffer,
-                               "\"%f\"\n", calc.get_result(std::string(qs->value)));
+                               "\"%f\"", calc.get_result(std::string(qs->value)));
             }
         }
     }
