@@ -47,3 +47,12 @@ lwan-calculator-api
 $ curl --data-urlencode "query={\"op\": \"*\", \"ops\": [3, 1,5,6,7,8,9]}" http://localhost:8888
 ```
 
+## Docker
+
+Get the docker container
+
+    docker pull gallegogt/lwan-calculator
+
+Use
+
+    docker run -p 8888:8888 gallegogt/lwan-calculator
