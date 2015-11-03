@@ -26,6 +26,7 @@ lwan-calculator-api
 
 ## Build
 ```bash
+~$ git clone https://github.com/gallegogt/lwan-calculator-api.git
 ~$ cd lwan-calculator-api
 ~/lwan-calculator-api$ mkdir build
 ~/lwan-calculator-api/$ cd build
