@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <memory>
 #include <cstring>
+#include <iterator>
 
 #include "calculator.hpp"
 
@@ -12,17 +13,17 @@ lwan_http_status_t view_calculator(lwan_request_t * req,
 {
     if (!(req->flags & REQUEST_METHOD_POST))
     {
-        static const char message[] = "USE:  curl --data-urlencode \"query={\"op\": \"-\", \"ops\": [3, 1]}\" http://localhost:8888";
+        static const char message[] = "USE JSON";
         response->mime_type = "text/plain";
         strbuf_set_static(response->buffer, message, sizeof(message) - 1);
     } else {
+        calculator calc;
         response->mime_type = "text/plain";
         lwan_key_value_t *qs;
         for (qs = req->post_data.base; qs->key; qs++) {
             if(strcmp(qs->key, "query") == 0) {
-                calculator calc;
-                strbuf_append_printf(response->buffer,
-                               "\"%f\"", calc.get_result(std::string(qs->value)));
+                double result = calc.get_result(qs->value);
+                strbuf_printf(response->buffer, "%f", result);
             }
         }
     }
@@ -42,7 +43,6 @@ int main() {
     lwan_t l;
     lwan_config_t config;
     config = *lwan_get_default_config();
-
     config.listener = strdup("*:8888");
 
     lwan_init_with_config(&l, &config);
