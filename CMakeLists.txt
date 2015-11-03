@@ -25,4 +25,4 @@ add_dependencies(${CMAKE_PROJECT_NAME} ${LWAN_JSON_NAME})
 
 set_property(TARGET ${CMAKE_PROJECT_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS "-std=c++11 -Wall -pedantic -Wextra -Weffc++ -Werror -O3 -finline-functions -finline-limit=64")
 
-target_link_libraries(${CMAKE_PROJECT_NAME} lwan-common.a ${ZLIB_LIBRARIES} pthread dl ${LWAN_JSON_NAME})
+target_link_libraries(${CMAKE_PROJECT_NAME} lwan-common ${ZLIB_LIBRARIES} pthread dl ${LWAN_JSON_NAME})
